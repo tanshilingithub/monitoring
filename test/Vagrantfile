@@ -3,8 +3,13 @@
 
 
 Vagrant.configure("2") do |config|
+#   if Vagrant.has_plugin?("vagrant-proxyconf")
+#     config.proxy.http     = "http://127.0.0.1:50579/"
+#     config.proxy.https    = "https://127.0.0.1:50579/"
+#   end
   config.vm.box = "centos/7"
   config.vm.box_check_update = false
+  config.vm.synced_folder ".", "/vagrant", disabled: true
   config.vm.provider "vmware_desktop" do |vb|
     vb.gui = false
     vb.memory = 4096
