@@ -28,6 +28,13 @@ debug
 kubectl logs -n kubesphere-system $(kubectl get pod -n kubesphere-system -l 'app in (ks-install, ks-installer)' -o jsonpath='{.items[0].metadata.name}') -f
 kubectl -n kubesphere-system get pod|grep ks-installer|awk '{print $1}' | xargs kubectl -n kubesphere-system delete pod
 kubectl -n kubesphere-system get pod
+kubectl get pvc -A
+kubectl get configmap -A
+kubectl get pod -A|grep -v Running
+
+kubectl -n kubesphere-system describe pod ks-apiserver-5f7b5dcd4c-zgh2r
+kubectl -n kubesphere-system logs -f --tail 300 deploy/ks-apiserver
+
 ```
 
 login
