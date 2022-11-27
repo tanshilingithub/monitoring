@@ -11,4 +11,10 @@ helm install victoria-metrics vm/victoria-metrics-cluster -f values.yaml -n vm
 debug
 ```shell
 kubectl -n vm get pod
+kubectl -n vm get svc
+kubectl -n vm edit svc victoria-metrics-victoria-metrics-cluster-vmselect
+  NodePort
 ```
+
+visit:
+http://192.168.186.132:32300
