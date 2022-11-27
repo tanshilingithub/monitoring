@@ -13,7 +13,7 @@ curl -sfL https://get-kk.kubesphere.io | VERSION=v2.3.0 sh -
 # Make kk executable
 chmod +x kk
 # Create a cluster
-./kk create cluster --with-kubernetes v1.24.1 --container-manager containerd --with-kubesphere v3.3.1
+./kk create cluster --with-kubernetes v1.24.1 --container-manager containerd --with-kubesphere v3.3.0
 ```
 
 install kubeshpere on k8s
