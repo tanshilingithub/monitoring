@@ -4,7 +4,7 @@ kubectl create ns vm
 helm install operator vm/victoria-metrics-operator -n vm
 # helm uninstall vmoperator -n vm
 
-kubectl create -n vm -f /tmp/victoriametrics/server.yaml
+kubectl create -n vm -f /tmp/victoriametrics/ingress.yaml
 ```
 debug:
 ```shell
