@@ -1,0 +1,272 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 2.36.1
+  name: prometheus-k8s-vm
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes/metrics
+    verbs:
+      - get
+  - nonResourceURLs:
+      - /metrics
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 2.36.1
+  name: prometheus-k8s-vm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-k8s-vm
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-k8s-vm
+    namespace: vm
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 2.36.1
+  name: prometheus-k8s-vm-config
+  namespace: vm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-k8s-vm-config
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-k8s-vm
+    namespace: vm
+---
+apiVersion: rbac.authorization.k8s.io/v1
+items:
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      labels:
+        app.kubernetes.io/component: prometheus
+        app.kubernetes.io/instance: k8s
+        app.kubernetes.io/name: prometheus
+        app.kubernetes.io/part-of: kube-prometheus
+        app.kubernetes.io/version: 2.36.1
+      name: prometheus-k8s-vm
+      namespace: default
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: Role
+      name: prometheus-k8s-vm
+    subjects:
+      - kind: ServiceAccount
+        name: prometheus-k8s-vm
+        namespace: vm
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      labels:
+        app.kubernetes.io/component: prometheus
+        app.kubernetes.io/instance: k8s
+        app.kubernetes.io/name: prometheus
+        app.kubernetes.io/part-of: kube-prometheus
+        app.kubernetes.io/version: 2.36.1
+      name: prometheus-k8s-vm
+      namespace: kube-system
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: Role
+      name: prometheus-k8s-vm
+    subjects:
+      - kind: ServiceAccount
+        name: prometheus-k8s-vm
+        namespace: vm
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      labels:
+        app.kubernetes.io/component: prometheus
+        app.kubernetes.io/instance: k8s
+        app.kubernetes.io/name: prometheus
+        app.kubernetes.io/part-of: kube-prometheus
+        app.kubernetes.io/version: 2.36.1
+      name: prometheus-k8s-vm
+      namespace: vm
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: Role
+      name: prometheus-k8s-vm
+    subjects:
+      - kind: ServiceAccount
+        name: prometheus-k8s-vm
+        namespace: vm
+kind: RoleBindingList
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 2.36.1
+  name: prometheus-k8s-vm-config
+  namespace: vm
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+items:
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: Role
+    metadata:
+      labels:
+        app.kubernetes.io/component: prometheus
+        app.kubernetes.io/instance: k8s
+        app.kubernetes.io/name: prometheus
+        app.kubernetes.io/part-of: kube-prometheus
+        app.kubernetes.io/version: 2.36.1
+      name: prometheus-k8s-vm
+      namespace: default
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - services
+          - endpoints
+          - pods
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - extensions
+        resources:
+          - ingresses
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - networking.k8s.io
+        resources:
+          - ingresses
+        verbs:
+          - get
+          - list
+          - watch
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: Role
+    metadata:
+      labels:
+        app.kubernetes.io/component: prometheus
+        app.kubernetes.io/instance: k8s
+        app.kubernetes.io/name: prometheus
+        app.kubernetes.io/part-of: kube-prometheus
+        app.kubernetes.io/version: 2.36.1
+      name: prometheus-k8s-vm
+      namespace: kube-system
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - services
+          - endpoints
+          - pods
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - extensions
+        resources:
+          - ingresses
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - networking.k8s.io
+        resources:
+          - ingresses
+        verbs:
+          - get
+          - list
+          - watch
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: Role
+    metadata:
+      labels:
+        app.kubernetes.io/component: prometheus
+        app.kubernetes.io/instance: k8s
+        app.kubernetes.io/name: prometheus
+        app.kubernetes.io/part-of: kube-prometheus
+        app.kubernetes.io/version: 2.36.1
+      name: prometheus-k8s-vm
+      namespace: vm
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - services
+          - endpoints
+          - pods
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - extensions
+        resources:
+          - ingresses
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - networking.k8s.io
+        resources:
+          - ingresses
+        verbs:
+          - get
+          - list
+          - watch
+kind: RoleList
+---
+apiVersion: v1
+automountServiceAccountToken: false
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 2.36.1
+  name: prometheus-k8s-vm
+  namespace: vm
