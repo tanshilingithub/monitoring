@@ -20,7 +20,7 @@ kubectl create -n vm -f /local_file/victoriametrics/vmagent-example-vmagent-out.
 ```
 
 
-visit vmagent: http://192.168.186.137:30755/targets
+visit vmagent: http://vmagent-example-vmagent.local.tanshilin.com
 
 
 配置抓取(直接使用prometheus一整套即可, 同时排除掉prometheus本身)

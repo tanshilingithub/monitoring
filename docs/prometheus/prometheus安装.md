@@ -15,5 +15,5 @@ kubectl -n monitoring get svc
 ```
 
 visit:
-    grafana:        http://192.168.186.137:32325
-    prometheus:     http://192.168.186.137:31998
+    grafana:        http://grafana.local.tanshilin.com          admin/admin
+    prometheus:     http://prom.local.tanshilin.com
