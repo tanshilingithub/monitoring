@@ -17,9 +17,12 @@ sealos run labring/kubernetes:v1.24.1 labring/helm:v3.8.2 labring/calico:v3.24.1
 kubectl taint node --all node-role.kubernetes.io/control-plane-
 kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
 sealos run labring/openebs:v1.9.0
+#sealos run labring/ingress-nginx:4.1.0
 ```
 
 verify
 ```shell
 kubectl get nodes
+#kubectl -n ingress-nginx get pod
+#kubectl -n ingress-nginx logs -f --tail 300 ingress-nginx-admission-create-fq5gd
 ```

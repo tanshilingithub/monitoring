@@ -21,3 +21,21 @@ spec:
     managed-by: vm-operator
   sessionAffinity: None
   type: NodePort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vmagent-example-vmagent
+  namespace: vm
+spec:
+  rules:
+    - host: vmagent-example-vmagent.local.tanshilin.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 80
