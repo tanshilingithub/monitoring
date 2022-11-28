@@ -2,7 +2,7 @@
 wget https://releases.hashicorp.com/vagrant/2.3.0/vagrant_2.3.0_windows_amd64.msi
 wget https://releases.hashicorp.com/vagrant-vmware-utility/1.0.21/vagrant-vmware-utility_1.0.21_x86_64.msi
 vagrant plugin install vagrant-vmware-desktop
-vagrant plugin install vagrant-proxyconf
+#vagrant plugin install vagrant-proxyconf
 
 vagrant init
 # default download box to ~/.vagrant.d/boxes, can copy to each other

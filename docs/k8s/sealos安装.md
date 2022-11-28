@@ -5,7 +5,7 @@ yum -y install wget
 
 为了兼容电脑网络环境不好的改动
 ```shell
-cp /tmp/sealos/sealos_4.1.3_linux_amd64.tar.gz ~/sealos_4.1.3_linux_amd64.tar.gz
+cp /local_file/sealos/sealos_4.1.3_linux_amd64.tar.gz ~/sealos_4.1.3_linux_amd64.tar.gz
 tar -zxvf sealos_4.1.3_linux_amd64.tar.gz sealos &&  chmod +x sealos && mv sealos /usr/bin
 ```
 

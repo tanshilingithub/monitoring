@@ -12,8 +12,8 @@ helm uninstall vmsingle -n vm
 
 配置抓取
 ```shell
-kubectl create -f /tmp/prometheus/crd/
-kubectl create -f /tmp/prometheus/serviceMonitor/
+kubectl create -f /local_file/prometheus/crd/
+kubectl create -f /local_file/prometheus/serviceMonitor/
 ```
 
 debug

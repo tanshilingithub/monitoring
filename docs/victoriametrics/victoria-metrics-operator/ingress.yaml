@@ -5,6 +5,7 @@ metadata:
   name: vmagent-example-vmagent
   namespace: vm
 spec:
+  ingressClassName: nginx
   rules:
     - host: vmagent-example-vmagent.local.tanshilin.com
       http:

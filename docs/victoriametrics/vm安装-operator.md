@@ -4,7 +4,8 @@ kubectl create ns vm
 helm install operator vm/victoria-metrics-operator -n vm
 # helm uninstall vmoperator -n vm
 
-kubectl create -n vm -f /tmp/victoriametrics/ingress.yaml
+kubectl apply -n vm -f /local_file/victoriametrics/server.yaml
+kubectl apply -n vm -f /local_file/victoriametrics/ingress.yaml
 ```
 debug:
 ```shell
@@ -15,7 +16,7 @@ kubectl -n vm logs -f --tail 300 vmselect-example-vmcluster-persistent-0
 kubectl -n vm logs -f --tail 300 vmstorage-example-vmcluster-persistent-0
 kubectl -n vm get svc|grep vmagent-example-vmagent
 # 修改为外部访问
-kubectl create -n vm -f /tmp/victoriametrics/vmagent-example-vmagent-out.yaml
+kubectl create -n vm -f /local_file/victoriametrics/vmagent-example-vmagent-out.yaml
 ```
 
 
@@ -24,8 +25,8 @@ visit vmagent: http://192.168.186.137:30755/targets
 
 配置抓取(直接使用prometheus一整套即可, 同时排除掉prometheus本身)
 ```shell
-kubectl create -f /tmp/prometheus/crd/
-kubectl create -f /tmp/prometheus/serviceMonitor/
+kubectl create -f /local_file/prometheus/crd/
+kubectl create -f /local_file/prometheus/serviceMonitor/
 ```
 
 debug

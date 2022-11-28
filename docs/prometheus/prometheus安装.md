@@ -1,8 +1,9 @@
 
 install
 ```shell
-kubectl create -f /tmp/prometheus/v0.11.0/setup
-kubectl apply -f /tmp/prometheus/v0.11.0
+kubectl create -f /local_file/prometheus/v0.11.0/setup
+kubectl apply -f /local_file/prometheus/v0.11.0
+kubectl apply -f /local_file/prometheus
 ```
 
 debug
