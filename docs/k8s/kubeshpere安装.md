@@ -1,11 +1,14 @@
 
 
 
+
 install kubeshpere on k8s
+为了使用本地配置的情况
 ```shell
-kubectl apply -f https://github.com/kubesphere/ks-installer/releases/download/v3.3.1/kubesphere-installer.yaml
-kubectl apply -f https://github.com/kubesphere/ks-installer/releases/download/v3.3.1/cluster-configuration.yaml
+kubectl apply -f /local_file/kubesphere/kubesphere-installer.yaml
+kubectl apply -f /local_file/kubesphere/cluster-configuration.yaml
 ```
+
 
 debug
 ```shell
@@ -28,24 +31,3 @@ login
 http://IP:30880   admin/P@88w0rd
 
 ```
-
-调整prometheus部分
-```shell
-kubectl get pod -A|grep prometheus
-kubectl -n kubesphere-monitoring-system edit pod prometheus-k8s-0
-kubectl -n kubesphere-monitoring-system get config
-kubectl -n kubesphere-monitoring-system get secret
-
-kubectl -n kubesphere-monitoring-system edit secret prometheus-k8s
-kubectl -n kubesphere-monitoring-system edit prometheus k8s
-kubectl -n kubesphere-monitoring-system get svc
-kubectl -n kubesphere-monitoring-system edit svc prometheus-k8s
-  NodePort
-```
-
-visit:
-http://192.168.186.132:30654
-    查询出的一个cpu指标结果如下:
-        node_cpu_guest_seconds_total{container="kube-rbac-proxy", cpu="0", instance="localhost.localdomain", job="node-exporter", mode="nice", namespace="kubesphere-monitoring-system", pod="node-exporter-c5sz2"}
-
-

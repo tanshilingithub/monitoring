@@ -41,7 +41,7 @@ spec:
       volumeSize: 20Gi # Minio PVC size.
     monitoring:
       type: external
-      endpoint: http://vmsingle-victoria-metrics-single-server.vm.svc:8428/select/0/prometheus/
+      endpoint: http://vmselect-example-vmcluster-persistent.vm:8481/select/0/prometheus/
       GPUMonitoring:     # Enable or disable the GPU-related metrics. If you enable this switch but have no GPU resources, Kubesphere will set it to zero.
         enabled: false
     gpu:                 # Install GPUKinds. The default GPU kind is nvidia.com/gpu. Other GPU kinds can be added here according to your needs.

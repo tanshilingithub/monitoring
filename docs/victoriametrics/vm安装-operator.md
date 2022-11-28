@@ -15,8 +15,6 @@ kubectl -n vm logs -f --tail 300 deploy/vminsert-example-vmcluster-persistent
 kubectl -n vm logs -f --tail 300 vmselect-example-vmcluster-persistent-0
 kubectl -n vm logs -f --tail 300 vmstorage-example-vmcluster-persistent-0
 kubectl -n vm get svc|grep vmagent-example-vmagent
-# 修改为外部访问
-kubectl create -n vm -f /local_file/victoriametrics/vmagent-example-vmagent-out.yaml
 ```
 
 
@@ -58,3 +56,7 @@ http://192.168.186.135:31441
 container_cpu_usage_seconds_total{container="alertmanager", cpu="total", id="/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod227f02b6_a96b_4e11_b7a5_eef718cbb353.slice/cri-containerd-227ba8a45c619461d75a50f5d06d5b5147a2d6f334955f8696ba197e391bb54f.scope", image="docker.io/prom/alertmanager:v0.23.0", instance="192.168.186.132:10250", job="kubelet", metrics_path="/metrics/cadvisor", name="227ba8a45c619461d75a50f5d06d5b5147a2d6f334955f8696ba197e391bb54f", namespace="kubesphere-monitoring-system", node="localhost.localdomain", pod="alertmanager-main-0"}
 查询结果:   vm:
 container_cpu_usage_seconds_total{container="alertmanager", cpu="total", id="/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod227f02b6_a96b_4e11_b7a5_eef718cbb353.slice/cri-containerd-227ba8a45c619461d75a50f5d06d5b5147a2d6f334955f8696ba197e391bb54f.scope", image="docker.io/prom/alertmanager:v0.23.0", instance="localhost.localdomain", job="kubernetes-nodes-cadvisor", kubernetes_io_arch="amd64", kubernetes_io_hostname="localhost.localdomain", kubernetes_io_os="linux", name="227ba8a45c619461d75a50f5d06d5b5147a2d6f334955f8696ba197e391bb54f", namespace="kubesphere-monitoring-system", pod="alertmanager-main-0"}
+
+
+
+http://vmselect-example-vmcluster-persistent.vm:8481/select/0/prometheus/
