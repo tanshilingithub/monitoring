@@ -1,14 +1,27 @@
 ```shell
+helm install operator vm/victoria-metrics-operator -n vm
+# helm uninstall vmoperator -n vm
 
-helm repo add vm https://victoriametrics.github.io/helm-charts/
-helm repo update
-
-helm show values vm/victoria-metrics-single > values.yaml
-kubectl create ns vm
-helm install vmsingle vm/victoria-metrics-single -f values.yaml -n vm
-helm upgrade vmsingle vm/victoria-metrics-single -f values.yaml -n vm
-helm uninstall vmsingle -n vm
+kubectl create -n vm -f /tmp/victoriametrics/server.yaml
 ```
+debug:
+```shell
+kubectl -n vm logs -f --tail 300 deploy/vmagent-example-vmagent
+kubectl -n vm logs -f --tail 300 deploy/vminsert-example-vmcluster-persistent
+kubectl -n vm logs -f --tail 300 vmselect-example-vmcluster-persistent-0
+kubectl -n vm logs -f --tail 300 vmstorage-example-vmcluster-persistent-0
+kubectl -n vm get svc|grep vmagent-example-vmagent
+# 修改为外部访问
+kubectl -n vm edit svc vmagent-example-vmagent
+  NodePort
+
+kubectl -n vm get svc vmagent-example-vmagent -o yaml > svc-vmagent-example-vmagent.yaml
+vi svc-vmagent-example-vmagent.yaml
+```
+
+
+visit vmagent: http://127.0.0.1:8429/targets
+
 
 配置抓取
 ```shell
@@ -20,6 +33,10 @@ debug
 ```shell
 kubectl -n vm get pod
 kubectl -n vm describe pod vmsingle-victoria-metrics-single-server-0
+# operator
+kubectl -n vm logs -f --tail 300 deploy/vmoperator-victoria-metrics-operator
+
+# single
 kubectl -n vm logs -f --tail 300 vmsingle-victoria-metrics-single-server-0
 kubectl -n vm get svc
 kubectl -n vm edit svc vmsingle-victoria-metrics-single-server

@@ -1,7 +1,5 @@
 
-```shell
-sysctl -w kernel.hostname=$(hostname -I|awk '{print $1}')
-```
+
 
 install kubeshpere on k8s
 ```shell

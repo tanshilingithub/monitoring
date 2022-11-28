@@ -330,7 +330,7 @@ server:
   terminationGracePeriodSeconds: 60
   serviceMonitor:
     # -- Enable deployment of Service Monitor for server component. This is Prometheus operator object
-    enabled: false
+    enabled: true
     # -- Service Monitor labels
     extraLabels: {}
     # -- Service Monitor annotations
@@ -350,7 +350,7 @@ server:
   # -- Scrape configuration for victoriametrics
   scrape:
     # -- If true scrapes targets, creates config map or use specified one with scrape targets
-    enabled: true
+    enabled: false
     # -- Use existing configmap if specified
     # otherwise .config values will be used
     configMap: ""
