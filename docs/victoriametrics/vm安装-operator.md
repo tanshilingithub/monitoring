@@ -1,4 +1,6 @@
 ```shell
+helm repo add vm https://victoriametrics.github.io/helm-charts/
+kubectl create ns vm
 helm install operator vm/victoria-metrics-operator -n vm
 # helm uninstall vmoperator -n vm
 
@@ -6,24 +8,21 @@ kubectl create -n vm -f /tmp/victoriametrics/server.yaml
 ```
 debug:
 ```shell
-kubectl -n vm logs -f --tail 300 deploy/vmagent-example-vmagent
+kubectl -n vm get pod
+kubectl -n vm logs -f --tail 300 deploy/vmagent-example-vmagent vmagent
 kubectl -n vm logs -f --tail 300 deploy/vminsert-example-vmcluster-persistent
 kubectl -n vm logs -f --tail 300 vmselect-example-vmcluster-persistent-0
 kubectl -n vm logs -f --tail 300 vmstorage-example-vmcluster-persistent-0
 kubectl -n vm get svc|grep vmagent-example-vmagent
 # 修改为外部访问
-kubectl -n vm edit svc vmagent-example-vmagent
-  NodePort
-
-kubectl -n vm get svc vmagent-example-vmagent -o yaml > svc-vmagent-example-vmagent.yaml
-vi svc-vmagent-example-vmagent.yaml
+kubectl create -n vm -f /tmp/victoriametrics/vmagent-example-vmagent-out.yaml
 ```
 
 
-visit vmagent: http://127.0.0.1:8429/targets
+visit vmagent: http://192.168.186.137:30755/targets
 
 
-配置抓取
+配置抓取(直接使用prometheus一整套即可, 同时排除掉prometheus本身)
 ```shell
 kubectl create -f /tmp/prometheus/crd/
 kubectl create -f /tmp/prometheus/serviceMonitor/

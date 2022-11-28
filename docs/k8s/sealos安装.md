@@ -17,10 +17,6 @@ sealos run labring/kubernetes:v1.24.1 labring/helm:v3.8.2 labring/calico:v3.24.1
 kubectl taint node --all node-role.kubernetes.io/control-plane-
 kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
 sealos run labring/openebs:v1.9.0
-
-kubectl get nodes
-kubectl describe node 
-
 ```
 
 verify
