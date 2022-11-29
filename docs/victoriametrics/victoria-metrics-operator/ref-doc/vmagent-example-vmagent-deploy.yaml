@@ -42,42 +42,13 @@ spec:
     spec:
       containers:
         - args:
-            - --reload-url=http://localhost:8429/-/reload
-            - --config-envsubst-file=/etc/vmagent/config_out/vmagent.env.yaml
-            - --watched-dir=/etc/vm/relabeling
-            - --config-file=/etc/vmagent/config/vmagent.yaml.gz
-          command:
-            - /bin/prometheus-config-reloader
-          env:
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  apiVersion: v1
-                  fieldPath: metadata.name
-          image: quay.io/prometheus-operator/prometheus-config-reloader:v0.58.0
-          imagePullPolicy: IfNotPresent
-          name: config-reloader
-          resources:
-            limits:
-              cpu: 100m
-              memory: 25Mi
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: FallbackToLogsOnError
-          volumeMounts:
-            - mountPath: /etc/vmagent/config
-              name: config
-            - mountPath: /etc/vmagent/config_out
-              name: config-out
-            - mountPath: /etc/vm/relabeling
-              name: relabeling-assets
-              readOnly: true
-        - args:
             - -httpListenAddr=:8429
             - -promscrape.config=/etc/vmagent/config_out/vmagent.env.yaml
             - -remoteWrite.maxDiskUsagePerURL=1073741824
             - -remoteWrite.tmpDataPath=/tmp/vmagent-remotewrite-data
             - -remoteWrite.url=http://vminsert-example-vmcluster-persistent.monitoring.svc.cluster.local:8480/insert/0/prometheus/api/v1/write
           image: victoriametrics/vmagent:v1.83.1
+#          image: victoriametrics/vmagent:v1.63.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10

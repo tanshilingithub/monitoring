@@ -27,6 +27,7 @@ kubectl -n monitoring get svc|grep vmagent-example-vmagent
 
 kubectl -n monitoring get deploy
 kubectl -n monitoring get deploy vmagent-example-vmagent -o yaml
+kubectl -n monitoring edit deploy operator-victoria-metrics-operator
 kubectl -n monitoring edit deploy vmagent-example-vmagent
 
 kubectl -n monitoring get secret tls-assets-vmagent-example-vmagent -o yaml
