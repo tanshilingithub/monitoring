@@ -23,10 +23,15 @@ kubectl get pod -A|grep -v Running
 
 kubectl -n kubesphere-system describe pod ks-apiserver-567fcb899d-4r9s5
 kubectl -n kubesphere-system describe pod ks-controller-manager-5d8b59b66f-d7wt5
+kubectl -n kubesphere-system get deploy
 kubectl -n kubesphere-system logs -f --tail 300 deploy/ks-apiserver
+kubectl -n kubesphere-system logs -f --tail 300 deploy/ks-console
+kubectl -n kubesphere-system logs -f --tail 300 deploy/ks-controller-manager
+
 
 kubectl -n kubesphere-system delete pod ks-apiserver-567fcb899d-4r9s5
 kubectl -n kubesphere-system delete pod ks-controller-manager-5d8b59b66f-d7wt5
+kubectl -n kubesphere-system delete pod ks-console-7d65f5d8d-5rp4j
 ```
 
 login

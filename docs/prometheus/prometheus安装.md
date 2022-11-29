@@ -6,12 +6,19 @@ kubectl apply -f /local_file/prometheus/v0.11.0
 kubectl apply -f /local_file/prometheus
 ```
 
+```shell
+
+kubectl delete -f /local_file/prometheus/v0.11.0/prometheus-prometheus.yaml
+```
+
 debug
 ```shell
 kubectl -n monitoring get pod
 kubectl -n monitoring get pod|grep -v Running
 
 kubectl -n monitoring get svc
+
+kubectl -n monitoring logs -f --tail 300 prometheus-k8s-0
 ```
 
 visit:

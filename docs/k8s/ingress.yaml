@@ -1,0 +1,18 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ks-console
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: ks.local.tanshilin.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: ks-console
+                port:
+                  number: 80
