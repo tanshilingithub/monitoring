@@ -3,7 +3,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: vmagent-example-vmagent
-  namespace: vm
 spec:
   ingressClassName: nginx
   rules:

@@ -1,0 +1,179 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    cni.projectcalico.org/containerID: ef0bd06cff90d2a473633a5bd505fd417b36f1d41e85f7d2c5f679c9ce4b23ac
+    cni.projectcalico.org/podIP: 100.124.219.185/32
+    cni.projectcalico.org/podIPs: 100.124.219.185/32
+  generateName: vmagent-example-vmagent-6d77694bdb-
+  labels:
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/instance: example-vmagent
+    app.kubernetes.io/name: vmagent
+    managed-by: vm-operator
+    pod-template-hash: 6d77694bdb
+  name: vmagent-example-vmagent-6d77694bdb-ngwc4
+  namespace: monitoring
+  ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: vmagent-example-vmagent-6d77694bdb
+      uid: 073ea640-1d54-4037-9e09-3d7369e2bc41
+spec:
+  containers:
+    - args:
+        - --reload-url=http://localhost:8429/-/reload
+        - --config-envsubst-file=/etc/vmagent/config_out/vmagent.env.yaml
+        - --watched-dir=/etc/vm/relabeling
+        - --config-file=/etc/vmagent/config/vmagent.yaml.gz
+      command:
+        - /bin/prometheus-config-reloader
+      env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+      image: quay.io/prometheus-operator/prometheus-config-reloader:v0.58.0
+      imagePullPolicy: IfNotPresent
+      name: config-reloader
+      resources:
+        limits:
+          cpu: 100m
+          memory: 25Mi
+        requests:
+          cpu: 100m
+          memory: 25Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: FallbackToLogsOnError
+      volumeMounts:
+        - mountPath: /etc/vmagent/config
+          name: config
+        - mountPath: /etc/vmagent/config_out
+          name: config-out
+        - mountPath: /etc/vm/relabeling
+          name: relabeling-assets
+          readOnly: true
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: kube-api-access-tk6jv
+          readOnly: true
+
+
+
+
+    - args:
+        - -httpListenAddr=:8429
+        - -promscrape.config=/etc/vmagent/config_out/vmagent.env.yaml
+        - -remoteWrite.maxDiskUsagePerURL=1073741824
+        - -remoteWrite.tmpDataPath=/tmp/vmagent-remotewrite-data
+        - -remoteWrite.url=http://vminsert-example-vmcluster-persistent.monitoring.svc.cluster.local:8480/insert/0/prometheus/api/v1/write
+      image: victoriametrics/vmagent:v1.83.1
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 10
+        httpGet:
+          path: /health
+          port: 8429
+          scheme: HTTP
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 5
+      name: vmagent
+      ports:
+        - containerPort: 8429
+          name: http
+          protocol: TCP
+      readinessProbe:
+        failureThreshold: 10
+        httpGet:
+          path: /health
+          port: 8429
+          scheme: HTTP
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 5
+      resources:
+        limits:
+          cpu: 200m
+          memory: 500Mi
+        requests:
+          cpu: 50m
+          memory: 200Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: FallbackToLogsOnError
+      volumeMounts:
+        - mountPath: /tmp/vmagent-remotewrite-data
+          name: persistent-queue-data
+        - mountPath: /etc/vmagent/config_out
+          name: config-out
+          readOnly: true
+        - mountPath: /etc/vmagent-tls/certs
+          name: tls-assets
+          readOnly: true
+        - mountPath: /etc/vm/relabeling
+          name: relabeling-assets
+          readOnly: true
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: kube-api-access-tk6jv
+          readOnly: true
+
+
+
+
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: 192.168.186.147
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: vmagent-example-vmagent
+  serviceAccountName: vmagent-example-vmagent
+  terminationGracePeriodSeconds: 30
+  tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+  volumes:
+    - emptyDir: {}
+      name: persistent-queue-data
+    - name: config
+      secret:
+        defaultMode: 420
+        secretName: vmagent-example-vmagent
+    - name: tls-assets
+      secret:
+        defaultMode: 420
+        secretName: tls-assets-vmagent-example-vmagent
+    - emptyDir: {}
+      name: config-out
+    - configMap:
+        defaultMode: 420
+        name: relabelings-assets-vmagent-example-vmagent
+      name: relabeling-assets
+    - name: kube-api-access-tk6jv
+      projected:
+        defaultMode: 420
+        sources:
+          - serviceAccountToken:
+              expirationSeconds: 3607
+              path: token
+          - configMap:
+              items:
+                - key: ca.crt
+                  path: ca.crt
+              name: kube-root-ca.crt
+          - downwardAPI:
+              items:
+                - fieldRef:
+                    apiVersion: v1
+                    fieldPath: metadata.namespace
+                  path: namespace

@@ -26,6 +26,6 @@ spec:
   staticScrapeSelector: {}
   staticScrapeNamespaceSelector: {}
   replicaCount: 1
-  serviceAccountName: vmagent
+  serviceAccountName: prometheus-k8s
   remoteWrite:
-    - url: "http://vminsert-example-vmcluster-persistent.vm.svc.cluster.local:8480/insert/0/prometheus/api/v1/write"
+    - url: "http://vminsert-example-vmcluster-persistent.monitoring.svc.cluster.local:8480/insert/0/prometheus/api/v1/write"
