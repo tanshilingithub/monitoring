@@ -1,0 +1,419 @@
+=================================================================================================================ceph
+# 删除已经没有pvc绑定的pv
+kubectl get pv |grep Released
+kubectl delete pv pvc-0764c87e-8888-48d6-a19c-5ec73845ccab
+
+
+----------------------------------服务器
+# 置空一个文件
+cat /dev/null > access.log
+# 清理内存
+echo 1 > /proc/sys/vm/drop_caches
+echo 2 > /proc/sys/vm/drop_caches
+echo 3 > /proc/sys/vm/drop_caches
+# 找指定端口的进程
+netstate -ntlp |grep <端口号>
+# 根据进程号找到进程信息
+ps aux|grep <进程号>
+# nginx 检查配置文件
+nginx -t
+nginx -s reopen
+nginx -s reload
+# 查看进程的实际内存使用量
+cat /proc/<进程id>/status
+# 查看tcp使用情况
+cat /proc/net/sockstat
+# 查看最大文件描述符
+cat /proc/sys/fs/file-max
+# 后台方式运行一个进程
+nohup ./bin/kibana >kibana.log 2>&1 &
+# 安装secure crt sz
+yum install -y lrzsz
+# 查看crontab列表
+crontab -e
+# 查看本机公网ip
+curl cip.cc
+# 后台运行
+nohup xxx &
+# alpine 配置代理
+sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+# 查看隐藏目录及其大小
+du -sh .[!.]*
+# 根据文件大小倒排
+ls -Sl -ah
+# 磁盘扩容
+yum install -y cloud-utils-growpart
+growpart /dev/vdb 1
+resize2fs /dev/vda1
+df -h /data
+# 查看udp端口
+netstat -ulp
+# 循环执行命令
+while true ;do sleep 3 &&echo "doing" && <command>; done;
+# 查看文件内容并过滤排除字符串
+cat /home/www/log/access.log |grep -Ev 'ping'
+-------------测试
+# 测试写入速度
+time dd if=/dev/zero of=/data/test.dbf bs=8k count=300000 oflag=direct
+# 测试读取速度
+time dd if=/data/test.dbf of=/dev/null bs=8k count=300000
+# 更加真实的
+yum install -y hdparm
+hdparm -Tt /dev/sda
+----------------------------------服务器-windows
+# 允许ping
+netsh firewall set icmpsetting 8
+----------------------------------服务器-centos
+# 设置阿里源
+cp -r /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup \
+&& curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo \
+&& yum clean all \
+&& yum makecache
+# 网络监控工具
+yum install -y iftop
+# 使用iftop
+iftop -n
+# 安装telnet
+yum install -y telnet.x86_64
+telnet 192.168.90.20 30726
+=================================================================================================================容器
+# 根据进程号找到容器信息
+docker inspect -f "{{.Id}}"  $(docker ps -q) |grep <进程id>
+docker inspect -f "{{.State.Pid}} {{.Config.Hostname}}"  $(docker ps -q) |grep <进程id>
+
+# 找到指定容器
+docker ps -a |grep report-server
+
+# 拷贝容器文件到宿主机
+docker cp cda060def229:/jmap.txt jmap.txt 
+
+# 拷贝宿主机文件到容器
+docker cp access.log 547e40242899:/data/servicesLog/logs/2021-02-02/access
+
+# 根据内存排序
+docker stats --no-stream --format "table {{.Name}}\t{{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}" | sort -k 4 -h
+=================================================================================================================Kubernetes
+# 拷贝文件
+kubectl -n dev get pod|grep wms-server
+kubectl -n dev -c wms-server cp wms-server-54f7f59595-g7vg9:/wms-server.jar wms-server.jar
+
+# 查看节点标签信息
+kubectl get node --show-labels |grep cn-shenzhen.192.168.2.16
+# 查看节点信息
+kubectl describe node <node_name>
+
+# 修改镜像版本
+kubectl -n wjh-prod set image deployment/<deployment_name> <deployment_name>=<image_id>
+# 安全的清空节点
+kubectl drain 192.168.90.14 --delete-emptydir-data
+# 取消维护
+kubectl uncordon <node name>
+# 驱逐已经运行的业务容器
+kubectl drain --ignore-daemonsets --delete-local-data 192.168.90.198
+# 删除node 节点(谨慎)
+kubectl delete node k8s-node-1
+维护完后需要将节点设置为可调度
+kubectl uncordon <node name>
+kubectl taint nodes 172.18.4.92 env=dev:NoExecute --overwrite --overwrite
+kubectl get node --show-labels
+
+# 设置污点
+kubectl taint nodes cn-shenzhen.192.168.2.20 node.node.kubernetes.io/not-business=1:NoSchedule
+# 去除污点
+kubectl taint nodes cn-shenzhen.192.168.2.20 node.node.kubernetes.io/not-business:NoSchedule-
+kubectl taint nodes cn-shenzhen.192.168.3.12 node.node.kubernetes.io/out-of-disk=value:NoExecute
+kubectl taint nodes cn-shenzhen.192.168.3.12 node.node.kubernetes.io/out-of-disk:NoExecute-
+
+kubectl label nodes 172.18.4.90 monitoring=monitoring
+kubectl label nodes 1.1.1.1 <label_name>-
+kubectl label nodes cn-shenzhen.192.168.2.17 service-backend-
+查看详细:
+journalctl -xefu kubelet
+重启docker:
+systemctl daemon-reload
+systemctl restart  docker
+systemctl status  docker -l
+重启kubelet:
+systemctl daemon-reload
+systemctl restart  kubelet
+systemctl status  kubelet -l
+删除异常状态的pod(Evicted)
+kubectl -n wjh-prod  get pods | grep Evicted |awk '{print$1}'|xargs kubectl -n wjh-prod delete pods
+kubectl get pods -n wjh-prod | grep Evicted |awk '{print$1}'|xargs kubectl -n wjh-prod delete pods
+kubectl get pods -n wjh-pre | grep Evicted |awk '{print$1}'|xargs kubectl -n wjh-pre delete pods
+kubectl get pods -n wjh-prod | grep MatchNodeSelector |awk '{print$1}'|xargs kubectl -n wjh-prod delete pods
+重启deployment
+kubectl -n wjh-prod patch deployment finance-api-org-supsend -p \
+  "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
+查看容器pid
+docker inspect -f '{{.State.Pid}}' <container_id>
+查看容器的在宿主机上的信息
+/proc/{pid}/net/sockstat
+查看configmap
+kubectl get configmaps <configmap_nmae> -o yaml -n <namespace>
+修改configmap
+kubectl edit configmaps <configmap_nmae> -o yaml -n <namespace>
+重建pod
+kubectl get pod kube-proxy-worker-cbpl4 -n kube-system -o yaml | kubectl replace --force -f -
+重建svc
+kubectl get service custshop-admin -n wjh-prod -o yaml | kubectl replace --force -f -
+# 重启prometheus
+docker restart prometheus
+docker logs -f --tail 100 prometheus
+# 查看deployment的编排文件
+kubectl get deployment -n wjh-prod -l app=custshop-tidb -o yaml > wjh-prod-custshop-tidb.yaml
+# 查看滚动查看pod的最近100行日志
+kubectl -n <namespace> logs -f --tail 100 <pod_name> -c <container_name>
+# 进入pod
+kubectl -n dev exec -it custshop-admin-5dfd7b77bc-cbq7h bash
+# 进入pod的容器中
+kubectl -n stage exec -it auth-server-5667898786-97gh6 -c auth-server sh
+# ping k8s中一个svc
+ping kubernetes.default.svc.cluster.local
+# 删除一个node
+kubectl delete node <node_name>
+# 为deploymnet开一个高位端口, 用于测试
+kubectl -n dev expose deployment oss-api-tristan --port=80 --type=NodePort --name=oss-api-tristan-test
+kubectl -n dev get svc|grep oss-api-tristan-test
+# 查看csr
+kubectl get csr
+# 审批csr
+kubectl certificate approve node-csr-lyXedzOyTqaPwjFT-3vyRZLO4RuTjWQEM6N0BM88C5k
+# 启动一个调试容器
+kubectl delete pod load-generator
+kubectl run -i --tty load-generator --image=docker.vika.ltd/bitnami/mysql:8.0.29-debian-11-r9 -- bash
+# 转发远程端口到本地
+kubectl --kubeconfig D:/config/vikadata/production/k8s/kubeconfig port-forward service/socat-6 3306:3306 -n vika-opsbase --address='0.0.0.0'
+# 查看所有的容器的镜像版本
+kubectl get pods -n vika-staging -o jsonpath="{.items[*].spec.containers[*].image}" |\
+tr -s '[[:space:]]' '\n' |\
+sort |\
+uniq -c
+=================================================================================================================helm
+# 拉取远程chart
+helm repo add sentry https://sentry-kubernetes.github.io/charts
+helm fetch sentry/sentry --untar
+# 转化chart为manifest
+helm template -n vika-datacenter --release-name vika --values values.yaml --output-dir manifest/ ./
+# 拉取定义在Chart.yaml | requirements.yaml的远程chart到本地
+helm dependency update
+# 安装
+helm install -n jaeger2 --create-namespace jaeger jaegertracing/jaeger
+# 卸载
+helm uninstall -n jaeger2 jaegertracing/jaeger
+=================================================================================================================jvm
+查看jvm启动参数
+jcmd <pid> VM.flags
+
+查看当前堆类及实例(不full-gc)
+jmap -histo 6 > jmap.txt
+
+查看当前堆存活的类及实例(会事先full-gc)
+jmap -histo:live 6 > jmap.txt
+
+分析jvm heap文件: 使用jdk自带的jvm dump 文件分析工具: C:\Program Files\Java\jdk1.8.0_271\bin\jvisualvm.exe
+
+查看gc情况
+jstat -gc 6 1000
+
+生成dump文件(会事先full-gc)
+jmap -dump:live,format=b,file=heap.hprof 6
+=======================================================arthas
+# attach进java进程
+java -jar arthas-boot.jar
+然后输入java进程id, 目前容器中统一为6
+# 查看阻塞线程
+thread -b
+# 查询所有线程
+thread --all
+=================================================================================================================Elasticsearch
+# 查看日志
+tail -f -n 100 elasticsearch.log
+
+curl -XGET 127.0.0.1:9200/_cluster/allocation/explain?pretty
+curl -XGET 192.168.90.203:9200/_cluster/allocation/explain?pretty
+
+# 临时增大分片数
+curl -X PUT 127.0.0.1:9200/_cluster/settings -H "Content-Type: application/json" -d '{ "persistent": { "cluster.max_shards_per_node": "4000" } }'
+curl -X PUT 127.0.0.1:9200/_cluster/settings -H "Content-Type: application/json" -d '{ "persistent": { "cluster.max_shards_per_node": "9000" } }'
+
+# 查看本机状态
+curl 127.0.0.1:9200/?pretty
+
+# 查看集群状态
+curl 127.0.0.1:9200/_cat/health?v
+
+# 查看节点健康
+curl 127.0.0.1:9200/_cat/nodes?v
+
+# 解除只读状态
+curl -XPUT -H "Content-Type: application/json" http://127.0.0.1:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": false}'
+
+# 查看队列大小
+http://es-cn-oew1ylukr001ynb70.elasticsearch.aliyuncs.com:9200/_nodes/stats?pretty
+
+# 设置队列大小
+thread_pool.search.queue_size: 10000
+
+# 查看拒绝次数
+/_cat/thread_pool/search?v&h=node_name,name,active,rejected,completed
+
+# 查看索引分片信息
+/ssu/_search_shards
+/ssu/_settings?pretty	
+
+# 查看安装了哪些插件
+/_cat/plugins
+
+# 增大索引分页深度
+curl --user elastic:<password> -H "Content-Type: application/json" -XPUT http://es-cn-oew1ylukr001ynb70.elasticsearch.aliyuncs.com:9200/task/_settings -d '{ "index.max_result_window" :"200000"}'
+
+# 查看索引配置
+curl --user elastic:wjh1qazXSW@123 http://es-cn-oew1ylukr001ynb70.elasticsearch.aliyuncs.com:9200/spu/_settings
+=================================================================================================================php-fpm
+# 查看是哪个库崩溃了
+dmesg | grep segfault | tail -10
+# 重启php-fpm(在容器中的pid为1)
+ps aux|grep "php-fpm: master"
+kill -USR2 1
+=================================================================================================================prometheus
+# 计算总体服务器内存使用率
+(1-sum(node_memory_MemAvailable_bytes)/sum(node_memory_MemTotal_bytes))*100
+# 计算总体服务器内存浪费资源
+(0.8-sum(node_memory_MemAvailable_bytes)/sum(node_memory_MemTotal_bytes))
+=================================================================================================================redis
+# 登录
+redis-cli -h redis-sentinel -p 80
+# 删除key
+del <key>
+flushdb <db>
+# 异步删除key
+unlink <key>
+flushdb async <db>
+# 批量模糊删除key
+redis-cli -p 7001 keys  "custshop:store:jileijiage:count:*"  | xargs  redis-cli -p 7001 del
+redis-cli -p 7001 keys  "custshop:store:jileijiage:count:*"  | xargs  redis-cli -p 7001 unlink
+
+# 慢执行
+CONFIG SET slowlog-log-slower-than 0
+slowlog get 100
+
+=================================================================================================================sls
+# 查询某个服务的每天的请求量
+* and request: "/api-report"|select  substr(time_local, 1, 2), count(1) group by substr(time_local, 1, 2)
+# 查看每个接口的请求量
+* and request: "/api-report"|select  request, count(1) occure_count group by request order by occure_count desc
+# 查看apk的下载次数
+* and bucket: wjh-oss-prod and referer: "https://oss-file.wangjiahuan.com/oss/admin/1624937065288_supplier_v2.0.1_2021_6_29_release_1.apk" and owner_id: 1337454711720095|select sum(response_body_length)/24/1024/1024
+# 查看服务死锁情况
+service : "wms-server" and  exception: "Deadlock"
+=================================================================================================================php-fpm
+# 验证配置文件
+php-fpm -t
+# 重启php-fpm
+kill -USR2 1
+=================================================================================================================mydumper-myloader
+# 删除SET NAMES binary
+sed -i "/\/\*\!40101 SET NAMES binary\*\/\;/d" *.sql
+# 删除创建db的语句
+rm -rf *-schema-create.sql
+=================================================================================================================centos
+# 防火墙放行一个服务
+vi /usr/lib/firewalld/services/node_exporter.xml
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Node Exporter</short>
+  <description>node exporter</description>
+  <port protocol="tcp" port="39100"/>
+</service>
+
+systemctl restart firewalld
+firewall-cmd --list-services
+firewall-cmd --get-services
+firewall-cmd --add-service=node_exporter
+查看网卡带宽
+yum install -y ethtool
+ethtool p5p2|grep Speed
+# increase disk
+xfs_growfs /
+=================================================================================================================sqlserver
+
+# 当_log文件过大时
+停服
+dbcc rebuild_log('ecology','D:\MSSQL_DATA\ecology_log.ldf');
+ALTER DATABASE ecology REBUILD LOG ON (NAME=ecology,FILENAME='D:\MSSQL_DATA\ecology_log.ldf');
+ALTER DATABASE 'ecology' SET MULTI_USER;
+=================================================================================================================mysql
+# 删除一天前的binlog
+PURGE MASTER LOGS BEFORE DATE_SUB( NOW( ), INTERVAL 1 DAY);
+# 自动删除一天前的binlog
+set global expire_logs_days = 3;
+# 调试主机上的mysql远程连接可用性
+docker run -it --rm mysql:8.0.26 bash
+mysql -h pc-wz90aa8d1s3736keu.rwlb.rds.aliyuncs.com -u online_wjhmadb_w -p -P 3306
+=================================================================================================================loki
+# 查看php异常日志
+{job="service_log",namespace="stage",service="product-api"}|="ERROR"
+=================================================================================================================debian
+# 修改源
+sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list && apt-get -y update
+# 安装telnet
+apt install -y xinetd telnetd  telnet
+# net-tools
+apt install -y net-tools
+=================================================================================================================linux
+# 让history的时候展示时间点
+export HISTTIMEFORMAT="%F %T "
+history
+# 查看二级目录文件数据(查看具体是什么导致inode占满)
+for i in /*; do echo $i; find $i | wc -l; done
+# use root user
+sudo su - root
+=================================================================================================================prometheus
+# 查看某个容器的内容
+container_memory_rss{container="promtail", pod=~"^product-api.*$"}
+=================================================================================================================etcd
+# 查看已有etcd集群情况
+ETCDCTL_API=3 etcdctl --endpoints=https://[192.168.90.16]:2379 \
+--cacert=/data/tristan/kube-auth/ca.pem \
+--cert=/data/tristan/kube-auth/server.pem \
+--key=/data/tristan/kube-auth/server-key.pem \
+member list -w table
+# etcd添加节点
+ETCDCTL_API=3 etcdctl --endpoints=https://[192.168.90.16]:2379 \
+--cacert=/data/tristan/kube-auth/ca.pem \
+--cert=/data/tristan/kube-auth/server.pem \
+--key=/data/tristan/kube-auth/server-key.pem \
+member add etcd-0 --peer-urls=https://192.168.90.16:2380
+# etcd删除节点
+ETCDCTL_API=3 etcdctl --endpoints=https://[192.168.90.16]:2379 \
+--cacert=/data/tristan/kube-auth/ca.pem \
+--cert=/data/tristan/kube-auth/server.pem \
+--key=/data/tristan/kube-auth/server-key.pem \
+member remove 8a62c53f827fc48b
+# 查看节点状态
+ETCDCTL_API=3 etcdctl --endpoints=https://[192.168.90.16]:2379 \
+--cacert=/data/tristan/kube-auth/ca.pem \
+--cert=/data/tristan/kube-auth/server.pem \
+--key=/data/tristan/kube-auth/server-key.pem \
+endpoint status --write-out=table
+# 查看集群健康状态
+ETCDCTL_API=3 etcdctl --endpoints=https://[192.168.90.16]:2379 \
+--cacert=/data/tristan/kube-auth/ca.pem \
+--cert=/data/tristan/kube-auth/server.pem \
+--key=/data/tristan/kube-auth/server-key.pem \
+endpoint health
+=================================================================================================================terraform
+# 配置代理
+vim HTTPS_PROXY
+HTTP_PROXY="http://127.0.0.1:36611"
+HTTPS_PROXY="http://127.0.0.1:36611"
+# 设置日志级别
+setx TF_LOG=TRACE
+# 设置本地缓存仓库
+# echo 'plugin_cache_dir   = "D:/cache/terraform"' > C:\Users\oppsh\AppData\Roaming\terraform.rc
+echo 'plugin_cache_dir   = "/d/cache/terraform"' > $HOME/.terraformrc
+=================================================================================================================git
+# 推送本地分支到远程(适用于由于合并引起远程分支被删除的情况)
+git push origin feat/ophs
+git branch --set-upstream-to=feat/ophs

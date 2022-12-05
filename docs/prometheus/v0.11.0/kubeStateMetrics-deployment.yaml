@@ -32,6 +32,8 @@ spec:
         - --port=8081
         - --telemetry-host=127.0.0.1
         - --telemetry-port=8082
+        - --metric-labels-allowlist=nodes=[*]
+        - --metric-annotations-allowlist=nodes=[*]
 #        image: k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.5.0
         image: k8s-gcr.m.daocloud.io/kube-state-metrics/kube-state-metrics:v2.5.0
 #        image: willdockerhub/kube-state-metrics:v2.4.2

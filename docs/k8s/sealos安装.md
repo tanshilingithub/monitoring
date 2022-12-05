@@ -1,6 +1,5 @@
 ```shell
 sysctl -w kernel.hostname=$(hostname -I|awk '{print $1}')
-yum -y install wget
 ```
 
 为了兼容电脑网络环境不好的改动
@@ -10,6 +9,7 @@ tar -zxvf sealos_4.1.3_linux_amd64.tar.gz sealos &&  chmod +x sealos && mv sealo
 ```
 
 ```shell
+yum -y install wget
 wget  https://github.com/labring/sealos/releases/download/v4.1.3/sealos_4.1.3_linux_amd64.tar.gz  && \
     tar -zxvf sealos_4.1.3_linux_amd64.tar.gz sealos &&  chmod +x sealos && mv sealos /usr/bin
 

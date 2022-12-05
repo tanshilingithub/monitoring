@@ -19,6 +19,7 @@ kubectl -n monitoring get pod|grep -v Running
 kubectl -n monitoring get svc
 
 kubectl -n monitoring logs -f --tail 300 prometheus-k8s-0
+kubectl -n monitoring logs -f --tail 300 deploy/kube-state-metrics kube-state-metrics
 ```
 
 visit:
