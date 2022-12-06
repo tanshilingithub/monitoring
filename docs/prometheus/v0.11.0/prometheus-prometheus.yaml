@@ -48,3 +48,5 @@ spec:
   version: 2.36.1
 #  remoteWrite:
 #    - url: "http://vminsert-example-vmcluster-persistent.vm.svc.cluster.local:8480/insert/0/prometheus/api/v1/write"
+#  remoteRead:
+#    - url: "http://vminsert-example-vmcluster-persistent.vm.svc.cluster.local:8480/select/0/prometheus/api/v1/select"
