@@ -37,4 +37,5 @@ kubectl -n monitoring edit statefulset prometheus-k8s
 
 
 kubectl -n monitoring get secret prometheus-k8s-web-config -o yaml
+kubectl -n monitoring describe pod kube-state-metrics-6cd976fbf5-jf8dj
 ```

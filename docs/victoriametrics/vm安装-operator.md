@@ -1,6 +1,6 @@
 ```shell
 helm repo add vm https://victoriametrics.github.io/helm-charts/
-#kubectl create ns vm
+kubectl create ns vm
 helm install operator vm/victoria-metrics-operator -n vm
 # helm uninstall operator -n vm
 
