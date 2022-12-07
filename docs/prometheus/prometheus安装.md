@@ -22,6 +22,7 @@ kubectl -n monitoring logs -f --tail 300 prometheus-k8s-0
 kubectl -n monitoring logs -f --tail 300 deploy/kube-state-metrics kube-state-metrics
 kubectl -n monitoring edit deploy kube-state-metrics
 kubectl -n monitoring get deploy kube-state-metrics -o yaml
+kubectl -n monitoring logs -f --tail 300 deploy/grafana
 ```
 
 visit:
