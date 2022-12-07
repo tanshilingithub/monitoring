@@ -23,6 +23,7 @@ kubectl -n monitoring logs -f --tail 300 deploy/kube-state-metrics kube-state-me
 kubectl -n monitoring edit deploy kube-state-metrics
 kubectl -n monitoring get deploy kube-state-metrics -o yaml
 kubectl -n monitoring logs -f --tail 300 deploy/grafana
+kubectl -n monitoring get ingress
 ```
 
 visit:

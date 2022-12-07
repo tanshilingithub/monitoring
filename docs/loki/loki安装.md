@@ -2,7 +2,7 @@
 ```shell
 helm repo add grafana https://grafana.github.io/helm-charts
 helm install loki-distributed grafana/loki-distributed -n loki --create-namespace
-helm uninstall loki-distributed -n loki
+#helm uninstall loki-distributed -n loki
 ```
 
 debug
@@ -29,4 +29,5 @@ http://loki-distributed-gateway.loki:80
 安装promtail
 ```shell
 helm install promtail grafana/promtail -n loki --create-namespace -f values.yaml
+#helm uninstall promtail -n loki
 ```
