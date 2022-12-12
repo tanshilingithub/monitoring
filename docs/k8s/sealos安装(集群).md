@@ -32,8 +32,8 @@ tar -zxvf sealos_4.1.3_linux_amd64.tar.gz sealos &&  chmod +x sealos && mv sealo
 
 ```shell
 sealos gen labring/kubernetes:v1.24.1 labring/helm:v3.8.2 labring/calico:v3.24.1 \
-  --masters 192.168.186.166,192.168.186.167,192.168.186.168 \
-  --nodes   192.168.186.169,192.168.186.170,192.168.186.171 \
+  --masters 192.168.186.184,192.168.186.185,192.168.186.186 \
+  --nodes   192.168.186.187,192.168.186.188,192.168.186.189 \
   > Clusterfile
 
 

@@ -1,7 +1,6 @@
 ```shell
 helm repo add vm https://victoriametrics.github.io/helm-charts/
-kubectl create ns vm
-helm install operator vm/victoria-metrics-operator -n vm
+helm install operator vm/victoria-metrics-operator -n vm --create-namespace
 # helm uninstall operator -n vm
 
 #kubectl apply -n vm -f /local_file/victoriametrics/vmagent_rbac.yaml

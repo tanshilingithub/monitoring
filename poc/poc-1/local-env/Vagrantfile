@@ -6,10 +6,10 @@ Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
   config.vm.box_check_update = false
   config.vm.synced_folder ".", "/vagrant", disabled: true
-#  config.vm.synced_folder "D:\\server_files", "/local_file"
+  config.vm.synced_folder "D:\\server_files", "/local_file"
   config.vm.provider "vmware_workstation" do |vb|
     vb.gui = false
-    vb.memory = 6144
+    vb.memory = 8192
     vb.cpus = 4
   end
   config.vm.provision "shell", inline: <<-SHELL
@@ -21,7 +21,7 @@ Vagrant.configure("2") do |config|
       config.vm.provider "vmware_workstation" do |vb|
         vb.gui = false
         vb.memory = 3072
-        vb.cpus = 2
+        vb.cpus = 3
       end
     end
   end
